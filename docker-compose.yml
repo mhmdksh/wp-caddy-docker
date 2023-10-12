@@ -57,6 +57,7 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
     networks:
       - wp-network
+
 networks:
   wp-network:
     driver: bridge
