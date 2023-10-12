@@ -1,0 +1,62 @@
+version: '3'
+services:
+
+  # Database
+  database:
+    image: mysql:latest
+    container_name: database
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db-dump:/docker-entrypoint-initdb.d
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+    command: [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+    ]
+    networks:
+      - wp-network
+
+  # Wordpress
+  wordpress:
+    depends_on:
+      - database
+    image: wordpress:php7.4-fpm-alpine
+    container_name: wordpress
+    restart: always
+    user: "root:root"
+    env_file: 
+      - .env
+    environment:
+      - WORDPRESS_DB_HOST=database:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=blog_wp
+    volumes:
+      - ./config/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./public_html:/var/www/html
+    networks:
+      - wp-network
+
+  # Webserver
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - wp-network
+networks:
+  wp-network:
+    driver: bridge
