@@ -1,1 +1,13 @@
+{$WP_URL}  {
+    root * /var/www/html
+    php_fastcgi wordpress:9000
+    file_server
+    encode gzip
 
+    @disallowed {
+        path /xmlrpc.php
+        path *.sql
+        path /wp-content/uploads/*.php
+    }
+    rewrite @disallowed '/index.php'
+}
