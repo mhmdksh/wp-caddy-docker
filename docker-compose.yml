@@ -1,65 +1,58 @@
 version: '3.9'
+
 services:
-    # Database
-    mysql:
-        container_name: mysql
-        image: mysql:latest
-        restart: always
-        environment:
-            MYSQL_DATABASE: "${DB_NAME}"
-            MYSQL_USER: "${DB_USER}"
-            MYSQL_PASSWORD: "${DB_PASSWORD}"
-            MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-        command: [
-            '--character-set-server=utf8mb4',
-            '--collation-server=utf8mb4_unicode_ci'
-            ]
-        ports:
-            - 3306
-        volumes:
-            - db_data:/var/lib/mysql
-            - ./db_dump:/docker-entrypoint-initdb.d
-        networks:
-          - wp-network
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
 
-    # Wordpress
-    wordpress:
-        container_name: wordpress
-        image: wordpress:php7.4-fpm-alpine
-        restart: always
-        stdin_open: true
-        tty: true
-        environment:
-            WORDPRESS_DB_HOST: mysql
-            WORDPRESS_DB_USER: "${DB_USER}"
-            WORDPRESS_DB_PASSWORD: "${DB_PASSWORD}"
-            WORDPRESS_DB_NAME: "${DB_NAME}"
-        volumes:
-            - ./public_html:/var/www/html
-            - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-        networks:
-          - wp-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - 80
 
-    # Webserver
-    caddy:
-      image: caddy
-      container_name: caddy
-      ports:
-        - 80:80
-        - 443:443
-      volumes:
-        - ./public_html:/var/www/html
-        - ./Caddyfile:/etc/caddy/Caddyfile
-        - caddy_data:/data
-        - caddy_config:/config
-      networks:
-        - wp-network
+  wordpress:
+    depends_on:
+      - mysql
+    image: wordpress:php7.4-fpm
+    ports:
+      - 9000
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: "${DB_USER}"
+      WORDPRESS_DB_PASSWORD: "${DB_PASSWORD}"
+      WORDPRESS_DB_NAME: "${DB_NAME}"
+    volumes:
+      - ./wordpress:/var/www/html
 
-networks:
-  wp-network:
-    driver: bridge
+  caddy:
+    image: caddy:alpine
+    container_name: caddy
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      WP_URL: "${WP_URL}"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./wordpress:/var/www/html
 
 volumes:
-  caddy_data:
-  caddy_config:
-  db_data:
+  caddy_config: {}
+  caddy_data: {}
