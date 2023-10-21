@@ -38,6 +38,7 @@ services:
       WORDPRESS_DB_NAME: "${DB_NAME}"
     volumes:
       - ./wordpress:/var/www/html
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
 
   caddy:
     image: caddy:alpine
