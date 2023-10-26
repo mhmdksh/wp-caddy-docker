@@ -38,16 +38,16 @@ services:
       WORDPRESS_DB_NAME: "${DB_NAME}"
     volumes:
       - ./wordpress:/var/www/html
-      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./php/php_extras.ini:/usr/local/etc/php/conf.d/php_extras.ini
 
   caddy:
-    image: caddy:alpine
+    image: caddy:2-alpine
     container_name: caddy
     ports:
       - 80:80
       - 443:443
     environment:
-      WP_URL: "${WP_URL}"
+      WP_DOMAIN: "${WP_DOMAIN}"
     volumes:
       - caddy_data:/data
       - caddy_config:/config

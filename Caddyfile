@@ -1,4 +1,12 @@
-{$WP_URL}  {
+www.{$WP_DOMAIN} {
+    redir https://{$WP_DOMAIN}{uri} permanent
+}
+
+http://{$WP_DOMAIN} {
+    redir https://{$WP_DOMAIN}{uri} permanent
+}
+
+https://{$WP_DOMAIN}  {
     root * /var/www/html
     php_fastcgi wordpress:9000
     file_server

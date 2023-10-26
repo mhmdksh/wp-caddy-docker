@@ -19,7 +19,8 @@ DB_NAME="my_db"
 DB_USER="db_user"
 DB_PASSWORD="db_password"
 DB_ROOT_PASSWORD="db_root_password"
-WP_URL="https://mydomain.com"
+# Enter your Domain or Subdomain here
+WP_DOMAIN="mydomain.com"
 ```
 4. Fire it up:
 ```
