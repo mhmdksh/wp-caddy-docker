@@ -21,5 +21,5 @@ https://{$WP_DOMAIN} {
 }
 
 https://{$DB_DOMAIN} {
-    reverse_proxy phpmyadmin:8080
+    reverse_proxy phpmyadmin:80
 }
