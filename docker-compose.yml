@@ -18,8 +18,8 @@ services:
     depends_on:
       - mysql
     environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
+      PMA_HOST: "${DB_HOST}"
+      PMA_PORT: "${DB_PORT}"
       PMA_ARBITRARY: 1
     ports:
       - 80
@@ -48,6 +48,7 @@ services:
       - 443:443
     environment:
       WP_DOMAIN: "${WP_DOMAIN}"
+      DB_DOMAIN: "${DB_DOMAIN}"
     volumes:
       - caddy_data:/data
       - caddy_config:/config

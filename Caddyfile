@@ -6,7 +6,7 @@ http://{$WP_DOMAIN} {
     redir https://{$WP_DOMAIN}{uri} permanent
 }
 
-https://{$WP_DOMAIN}  {
+https://{$WP_DOMAIN} {
     root * /var/www/html
     php_fastcgi wordpress:9000
     file_server
@@ -18,4 +18,8 @@ https://{$WP_DOMAIN}  {
         path /wp-content/uploads/*.php
     }
     rewrite @disallowed '/index.php'
+}
+
+https://{$DB_DOMAIN} {
+    reverse_proxy phpmyadmin:8080
 }
