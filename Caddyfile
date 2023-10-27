@@ -20,6 +20,16 @@ https://{$WP_DOMAIN} {
     rewrite @disallowed '/index.php'
 }
 
+http://{$DB_DOMAIN} {
+    redir https://{$DB_DOMAIN}{uri} permanent
+}
+
 https://{$DB_DOMAIN} {
-    reverse_proxy phpmyadmin:80
+    route {
+        @allowed {
+            remote_ip {$IP_WHITELIST}
+        }
+        reverse_proxy @allowed phpmyadmin:80
+        respond 403
+    }
 }

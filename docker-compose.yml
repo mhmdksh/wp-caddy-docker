@@ -49,6 +49,7 @@ services:
     environment:
       WP_DOMAIN: "${WP_DOMAIN}"
       DB_DOMAIN: "${DB_DOMAIN}"
+      IP_WHITELIST: "${IP_WHITELIST}"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
