@@ -1,3 +1,5 @@
 .env
 mysql_data/
 wordpress/
+.DS_Store
+php/php_extras.ini

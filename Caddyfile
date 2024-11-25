@@ -1,12 +1,4 @@
-www.{$WP_DOMAIN} {
-    redir https://{$WP_DOMAIN}{uri} permanent
-}
-
-http://{$WP_DOMAIN} {
-    redir https://{$WP_DOMAIN}{uri} permanent
-}
-
-https://{$WP_DOMAIN} {
+{$WP_DOMAIN} {
     root * /var/www/html
     php_fastcgi wordpress:9000
     file_server
@@ -20,11 +12,7 @@ https://{$WP_DOMAIN} {
     rewrite @disallowed '/index.php'
 }
 
-http://{$DB_DOMAIN} {
-    redir https://{$DB_DOMAIN}{uri} permanent
-}
-
-https://{$DB_DOMAIN} {
+{$DB_DOMAIN} {
     route {
         @allowed {
             remote_ip {$IP_WHITELIST}
