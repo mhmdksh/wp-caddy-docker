@@ -20,20 +20,28 @@ DB_HOST="mysql"
 DB_PORT="3306"
 
 ## Define Your DB Connection details here
-DB_NAME="my_db"
-DB_USER="db_user"
-DB_PASSWORD="db_password"
-DB_ROOT_PASSWORD="db_root_password"
+DB_NAME="wp_db"
+DB_USER="wp_user"
+DB_PASSWORD="wp_P@ssw0rd"
+DB_ROOT_PASSWORD="wp_root_P@ssw0rd"
 
-## Specify your domains name here, Enter without http, or https
-## Make sure the A records in your DNS Settings point to that server
-WP_DOMAIN="mydomain.com"
-DB_DOMAIN="db.mydomain.com"
+## Specify your domains name here. NOTE: Use `https://` prefix if you pointed the domain to the server
+## or `http://` if you haven't pointed the domain or you are using this locally
+WP_DOMAIN="http://mydomain.com"
+DB_DOMAIN="http://db.mydomain.com"
 
 ## Specify the IP Addresses that are allowed to access the phpmyadmin page
-IP_WHITELIST="IP1 IP2 IP3"
+IP_WHITELIST="127.0.0.1 10.0.0.0/8 192.168.0.0/16 172.0.0.0/8"
 ```
-4. Fire it up:
+4. (Optional) Modify the php.ini configuration file under `./php/php_extras.ini` if needed:
+```
+file_uploads = On
+memory_limit = 256M
+upload_max_filesize = 256M
+post_max_size = 256M
+max_execution_time = 300
+```
+5. Fire it up:
 ```
 docker-compose up -d
 ```

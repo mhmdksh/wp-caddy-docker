@@ -27,7 +27,7 @@ services:
       - 80
 
   wordpress:
-    image: wordpress:php7.4-fpm
+    image: wordpress:php8.3-fpm-alpine
     container_name: wordpress
     restart: always
     environment:
