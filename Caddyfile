@@ -12,6 +12,49 @@
     rewrite @disallowed '/index.php'
 }
 
+# Main site
+{$WP_DOMAIN} {
+    root * /var/www/html
+    php_fastcgi wordpress:9000
+    file_server
+    encode gzip
+
+    @disallowed {
+        path /xmlrpc.php
+        path *.sql
+        path /wp-content/uploads/*.php
+    }
+    rewrite @disallowed '/index.php'
+
+    # WordPress Multisite rewrites
+    @notfile {
+        not file
+        not path /wp-admin/* /wp-includes/* /wp-content/* /xmlrpc.php /index.php
+    }
+    rewrite @notfile /index.php?{query}
+}
+
+# Wildcard subdomains
+https://*.{$WP_CLEAN_DOMAIN} {
+    root * /var/www/html
+    php_fastcgi wordpress:9000
+    file_server
+    encode gzip
+
+    @disallowed {
+        path /xmlrpc.php
+        path *.sql
+        path /wp-content/uploads/*.php
+    }
+    rewrite @disallowed '/index.php'
+
+    @notfile {
+        not file
+        not path /wp-admin/* /wp-includes/* /wp-content/* /xmlrpc.php /index.php
+    }
+    rewrite @notfile /index.php?{query}
+}
+
 {$DB_DOMAIN} {
     route {
         @allowed {

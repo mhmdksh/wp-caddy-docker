@@ -35,6 +35,15 @@ services:
       WORDPRESS_DB_USER: "${DB_USER}"
       WORDPRESS_DB_PASSWORD: "${DB_PASSWORD}"
       WORDPRESS_DB_NAME: "${DB_NAME}"
+      WORDPRESS_CONFIG_EXTRA: |
+        /* Multisite */
+        define('WP_ALLOW_MULTISITE', true);
+        define('MULTISITE', true);
+        define('SUBDOMAIN_INSTALL', true); // Change to false for subdirectories
+        define('DOMAIN_CURRENT_SITE', '${WP_CLEAN_DOMAIN}'); # Domain without protocol
+        define('PATH_CURRENT_SITE', '/');
+        define('SITE_ID_CURRENT_SITE', 1);
+        define('BLOG_ID_CURRENT_SITE', 1);
     ports:
       - 9000
     volumes:
@@ -51,7 +60,8 @@ services:
       - 80:80
       - 443:443
     environment:
-      WP_DOMAIN: "${WP_DOMAIN}"
+      WP_DOMAIN: "${WP_DOMAIN}" # e.g., https://example.com
+      WP_WILDCARD_DOMAIN: "${WP_WILDCARD_DOMAIN}" # e.g., https://*.example.com
       DB_DOMAIN: "${DB_DOMAIN}"
       IP_WHITELIST: "${IP_WHITELIST}"
     volumes:
